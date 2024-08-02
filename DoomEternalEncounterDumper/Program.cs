@@ -28,15 +28,12 @@ for (int i = 1; i < listMaxSize / 0x8; i++)
 {
 	var encounter = proc.ReadValue<IntPtr>(encounterListPtr + (i * 0x8));
 	var encounterNamePtr = proc.ReadValue<IntPtr>(encounter + 0x48);
-	if ((string?)proc.ReadString(encounterNamePtr, 64) != "player1")
-	{
-		var encounterActive = proc.ReadValue<bool>(encounter + 0x640);
-		Console.WriteLine($"[{encounter:X16}] {proc.ReadString(proc.ReadValue<IntPtr>(encounter + 0x48), 255),-64} {encounterActive,-5}");
-	}
-	else
-	{
-		break;
-	}
+	var encounterName = proc.ReadString(encounterNamePtr, 64);
+
+	if (encounterName == "player1") break;
+
+	var encounterActive = proc.ReadValue<bool>(encounter + 0x640);
+	Console.WriteLine($"[{encounter:X16}] {encounterName,-64} {encounterActive,-5}");
 }
 
 Console.ReadKey();
